@@ -37,4 +37,15 @@ void initializeIO() {
  * can be implemented in this task if desired.
  */
 void initialize() {
+  BL.Kp = 0.0;
+  BL.Ki = 0.0;
+  BL.Kd = 0.0;
+
+  BR.Kp = 0.0;
+  BR.Ki = 0.0;
+  BR.Kd = 0.0;
+
+  T.Kp = 0.0;
+  T.Ki = 0.0;
+  T.Kd = 0.0;
 }

@@ -30,7 +30,32 @@
  * This task should never exit; it should end with some kind of infinite loop, even if empty.
  */
 void operatorControl() {
-	while (1) {
+	TaskHandle firstTH = taskRunLoop(mainLoop, 20);
+	while (true) {
+		if(joystickGetDigital(1, 8, JOY_UP)){
+			if(!BL.target >= 2000){
+				BL.target += 10;
+				BR.target += 10;
+			}
+		}
+		else if(joystickGetDigital(1, 8, JOY_DOWN)){
+			if(!BL.target <= 0){
+				BL.target += -10;
+				BR.target += -10;
+			}
+		}
+
+		if(joystickGetDigital(1, 7, JOY_UP)){
+			if(!T.target >= 3900){
+				T.target += 10;
+			}
+		}
+		else if(joystickGetDigital(1, 7, JOY_DOWN)){
+			if(!T.target <= 0){
+				T.target += -10;
+			}
+		}
 		delay(20);
 	}
+	taskDelete(firstTH); //just to remove the stupid "unused variable" thing from above
 }
