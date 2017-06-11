@@ -37,6 +37,7 @@ void initializeIO() {
  * can be implemented in this task if desired.
  */
 void initialize() {
+  TaskHandle secondTH = taskRunLoop(debug, 200);
   BL.Kp = 0.0;
   BL.Ki = 0.0;
   BL.Kd = 0.0;

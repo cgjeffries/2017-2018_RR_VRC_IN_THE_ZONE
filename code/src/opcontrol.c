@@ -40,8 +40,8 @@ void operatorControl() {
 		}
 		else if(joystickGetDigital(1, 8, JOY_DOWN)){
 			if(!BL.target <= 0){
-				BL.target += -10;
-				BR.target += -10;
+				BL.target -= 10;
+				BR.target -= 10;
 			}
 		}
 
@@ -52,7 +52,7 @@ void operatorControl() {
 		}
 		else if(joystickGetDigital(1, 7, JOY_DOWN)){
 			if(!T.target <= 0){
-				T.target += -10;
+				T.target -= 10;
 			}
 		}
 		delay(20);
