@@ -13,7 +13,17 @@ void updateSensors(){
 double PIDdo(PID *thing){
   updateSensors();
   thing->error  = thing->target - thing->sensor;
-  thing->integral += thing->error;
+  if(abs(thing->error) < 200){
+    if(abs(thing->error < 8)){
+      //thing->integral = 0;
+    }
+    else{
+      thing->integral += thing->error;
+    }
+  }
+  else{
+    thing->integral = 0;
+  }
   //may need integral = 0 stuff
   thing->derivative = thing->error - thing->previous_error;
   thing->previous_error = thing->error;

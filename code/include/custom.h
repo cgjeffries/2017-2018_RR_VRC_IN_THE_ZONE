@@ -9,11 +9,13 @@
 #define BRPot 2
 #define QUAD1 1
 #define QUAD2 2
+#define button1 3
+#define button2 4
 
 //PID structs
 #ifndef TEST0
 #define TEST0
-typedef struct NAME{
+typedef struct {
   double Kp;
   double Ki;
   double Kd;
@@ -25,17 +27,10 @@ typedef struct NAME{
   double sensor;
 }PID;
 
-PID BL = {
-  .Kp = 0, .Ki = 0, .Kd = 0, .error = 0, .previous_error = 0, .integral = 0, .derivative = 0, .target = 0, .sensor = 0
-};
+PID BL;
+PID BR;
+PID T;
 
-PID BR = {
-  .Kp = 0, .Ki = 0, .Kd = 0, .error = 0, .previous_error = 0, .integral = 0, .derivative = 0, .target = 0, .sensor = 0
-};
-
-PID T = {
-  .Kp = 0, .Ki = 0, .Kd = 0, .error = 0, .previous_error = 0, .integral = 0, .derivative = 0, .target = 0, .sensor = 0
-};
 #endif
 
 //thread prototypes

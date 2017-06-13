@@ -30,11 +30,32 @@
  * This task should never exit; it should end with some kind of infinite loop, even if empty.
  */
 void operatorControl() {
+	BL.target = BR.target = 1500;
+
+	BL.Kp = 0.2;
+	BL.Ki = 0.01;
+	BL.Kd = 0.4;
+
+	BR.Kp = 0.2;
+	BR.Ki = 0.01;
+	BR.Kd = 0.4;
+
+	T.Kp = 0.0;
+	T.Ki = 0.0;
+	T.Kd = 0.0;
 
 	TaskHandle firstTH = taskRunLoop(mainLoop, 20);
-	TaskHandle secondTH = taskRunLoop(debug, 200);
+	//TaskHandle secondTH = taskRunLoop(debug, 200);
 	while (true) {
 		if(1==1){
+			if(digitalRead(button1) == LOW){
+				BL.target = BR.target = 1500;
+			}
+			else if(digitalRead(button2) == LOW){
+				BR.target = BL.target = 2500;
+			}
+		}
+		else if(2==1){
 			if(encoderGet(mainQuad) >= 1000){
 				if(encoderGet(mainQuad) <= 3000){
 					BL.target = BR.target = encoderGet(mainQuad);
@@ -75,5 +96,5 @@ void operatorControl() {
 		}
 	}
 	taskDelete(firstTH); //just to remove the stupid "unused variable" thing from above
-	taskDelete(secondTH);
+	//taskDelete(secondTH);
 }

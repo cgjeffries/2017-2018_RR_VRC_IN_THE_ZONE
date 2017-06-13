@@ -21,6 +21,8 @@
  * configure a UART port (usartOpen()) but cannot set up an LCD (lcdInit()).
  */
 void initializeIO() {
+  pinMode(button1, INPUT);
+  pinMode(button2, INPUT);
 }
 
 /*
@@ -39,13 +41,13 @@ void initializeIO() {
 void initialize(){
 
   PID BL = {
-    .Kp = 0, .Ki = 0, .Kd = 0, .error = 0, .previous_error = 0, .integral = 0, .derivative = 0, .target = 0, .sensor = 0
+    .Kp = 0, .Ki = 0, .Kd = 0, .error = 0, .previous_error = 0, .integral = 0, .derivative = 0, .target = 1500, .sensor = 0
   };
   PID BR = {
-    .Kp = 0, .Ki = 0, .Kd = 0, .error = 0, .previous_error = 0, .integral = 0, .derivative = 0, .target = 0, .sensor = 0
+    .Kp = 0, .Ki = 0, .Kd = 0, .error = 0, .previous_error = 0, .integral = 0, .derivative = 0, .target = 1500, .sensor = 0
   };
   PID T = {
-    .Kp = 0, .Ki = 0, .Kd = 0, .error = 0, .previous_error = 0, .integral = 0, .derivative = 0, .target = 0, .sensor = 0
+    .Kp = 0, .Ki = 0, .Kd = 0, .error = 0, .previous_error = 0, .integral = 0, .derivative = 0, .target = 1500, .sensor = 0
   };
 
   mainQuad = encoderInit(QUAD1, QUAD2, false);
