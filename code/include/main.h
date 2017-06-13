@@ -46,10 +46,13 @@
 #include <API.h>
 #include <custom.h>
 
+
 // Allow usage of this file in C++ programs
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+Encoder mainQuad;
 
 //#define AUTO_DEBUG
 

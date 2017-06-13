@@ -5,12 +5,13 @@ void setTop(int speed){
   motorSet(chainRight, speed);
 }
 
-void updateSensors(PID *thing){
-  thing->sensor = 0; //fix this
+void updateSensors(){
+  BL.sensor = analogRead(BLPot); //fix this
+  BR.sensor = analogRead(BRPot);
 }
 
 double PIDdo(PID *thing){
-  updateSensors(thing);
+  updateSensors();
   thing->error  = thing->target - thing->sensor;
   thing->integral += thing->error;
   //may need integral = 0 stuff
