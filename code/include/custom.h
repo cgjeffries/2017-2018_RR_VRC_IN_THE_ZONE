@@ -4,22 +4,34 @@
 #define chainLeft 3
 #define chainRight 8
 
-//PID structs
-struct PID {
-  double Kp = 0;
-  double Ki = 0;
-  double Kd = 0;
-  double error = 0;
-  double previous_error = 0;
-  double integral = 0;
-  double derivative = 0;
-  double target = 0;
-  double sensor = 0;
-};
+//sensors
+#define BLPot 1
+#define BRPot 2
+#define QUAD1 1
+#define QUAD2 2
+#define button1 3
+#define button2 4
 
-struct PID BL;
-struct PID BR;
-struct PID T;
+//PID structs
+#ifndef TEST0
+#define TEST0
+typedef struct {
+  double Kp;
+  double Ki;
+  double Kd;
+  double error;
+  double previous_error;
+  double integral;
+  double derivative;
+  double target;
+  double sensor;
+}PID;
+
+PID BL;
+PID BR;
+PID T;
+
+#endif
 
 //thread prototypes
 void mainLoop();
