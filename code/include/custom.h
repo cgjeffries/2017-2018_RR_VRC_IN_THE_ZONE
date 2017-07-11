@@ -4,13 +4,21 @@
 #define chainLeft 3
 #define chainRight 8
 
+#define driveLeftFront 4
+#define driveLeftBack 5
+#define driveRightFront 7
+#define driveRightBack 6
+
 //sensors
 #define BLPot 1
 #define BRPot 2
-#define QUAD1 1
-#define QUAD2 2
-#define button1 3
-#define button2 4
+#define button1 1
+#define button2 2
+#define QuadLeft1 3
+#define QuadLeft2 4
+#define QuadRight1 5
+#define QuadRight2 6
+
 
 //PID structs
 #ifndef TEST0

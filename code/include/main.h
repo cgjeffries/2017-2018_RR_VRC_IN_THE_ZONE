@@ -52,7 +52,9 @@
 extern "C" {
 #endif
 
-Encoder mainQuad;
+//Quad declarations
+Encoder quadLeftDrive;
+Encoder quadRightDrive;
 #include <custom.h>
 
 //#define AUTO_DEBUG

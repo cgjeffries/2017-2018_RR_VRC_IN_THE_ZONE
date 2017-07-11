@@ -50,7 +50,8 @@ void initialize(){
     .Kp = 0, .Ki = 0, .Kd = 0, .error = 0, .previous_error = 0, .integral = 0, .derivative = 0, .target = 1500, .sensor = 0
   };
 
-  mainQuad = encoderInit(QUAD1, QUAD2, false);
+  quadLeftDrive = encoderInit(QuadLeft1, QuadLeft2, false);
+  quadRightDrive = encoderInit(QuadRight1, QuadRight2, true);
 
   TaskHandle secondTH = taskRunLoop(debug, 200);
   BL.Kp = 0.075;
