@@ -10,7 +10,7 @@
  * obtained from http://sourceforge.net/projects/freertos/files/ or on request.
  */
 
-//#include "main.h"
+#include "main.h"
 
 /*
  * Runs the user autonomous code. This function will be started in its own task with the default
@@ -26,5 +26,37 @@
  * The autonomous task may exit, unlike operatorControl() which should never exit. If it does
  * so, the robot will await a switch to another mode or disable/enable cycle.
  */
-//void autonomous() {
-//}
+void autonomous() {
+  //Lift safety
+  BL.target = BR.target = 1500; //FIND THIS VALUE!!!
+  //Chain Bar safety:
+  T.target = 1500; //FIND THIS VALUE!!!
+
+  //DR4B Left constants
+	BL.Kp = 0.2;
+	BL.Ki = 0.01;
+	BL.Kd = 0.4;
+
+  //DR4B Right constants
+	BR.Kp = 0.2;
+	BR.Ki = 0.01;
+	BR.Kd = 0.4;
+
+  //Chain Bar constants
+	T.Kp = 0.0;
+	T.Ki = 0.0;
+	T.Kd = 0.0;
+
+  //Left Drive constants
+  LD.Kp = 0.2;
+  LD.Ki = 0.0;
+  LD.Kd = 0.0;
+
+  //Right Drive constants
+  RD.Kp = 0.2;
+  RD.Ki = 0.0;
+  RD.Kd = 0.0;
+
+
+
+}

@@ -1,4 +1,5 @@
 #include "main.h"
+#include "math.h"
 
 void setTop(int speed){
   motorSet(chainLeft, speed);
@@ -6,15 +7,18 @@ void setTop(int speed){
 }
 
 void updateSensors(){
-  BL.sensor = analogRead(BLPot); //fix this
+  BL.sensor = analogRead(BLPot);
   BR.sensor = analogRead(BRPot);
+  T.sensor = analogRead(CBPot);
+  LD.sensor = encoderGet(quadLeftDrive);
+  RD.sensor = encoderGet(quadRightDrive);
 }
 
 double PIDdo(PID *thing){
   updateSensors();
   thing->error  = thing->target - thing->sensor;
-  if(abs(thing->error) < 200){
-    if(abs(thing->error < 8)){
+  if(fabs(thing->error) < 200){
+    if(fabs(thing->error) < 8){
       //thing->integral = 0;
     }
     else{
@@ -30,8 +34,18 @@ double PIDdo(PID *thing){
   return (thing->Kp*thing->error + thing->Ki*thing->integral + thing->Kd*thing->derivative);
 }
 
-void mainLoop(){
+void mainLoopOp(){
+  if(!(digitalRead(12) || digitalRead(11))){
+    motorSet(liftLeft, ((int) PIDdo(&BL)));
+    motorSet(liftRight, ((int) PIDdo(&BR)));
+    setTop((int) PIDdo(&T));
+  }
+}
+void mainLoopAuto(){
   motorSet(liftLeft, ((int) PIDdo(&BL)));
   motorSet(liftRight, ((int) PIDdo(&BR)));
   setTop((int) PIDdo(&T));
+  setDriveLeft((int) PIDdo(&LD));
+  setDriveRight((int) PIDdo(&RD));
+
 }

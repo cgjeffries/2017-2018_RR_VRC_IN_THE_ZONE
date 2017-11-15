@@ -39,6 +39,7 @@ void initializeIO() {
  * can be implemented in this task if desired.
  */
 void initialize(){
+  /*
 
   PID BL = {
     .Kp = 0, .Ki = 0, .Kd = 0, .error = 0, .previous_error = 0, .integral = 0, .derivative = 0, .target = 1500, .sensor = 0
@@ -49,9 +50,17 @@ void initialize(){
   PID T = {
     .Kp = 0, .Ki = 0, .Kd = 0, .error = 0, .previous_error = 0, .integral = 0, .derivative = 0, .target = 1500, .sensor = 0
   };
+  PID RD = {
+    .Kp = 0, .Ki = 0, .Kd = 0, .error = 0, .previous_error = 0, .integral = 0, .derivative = 0, .target = 0, .sensor = 0
+  };
+  PID LD = {
+    .Kp = 0, .Ki = 0, .Kd = 0, .error = 0, .previous_error = 0, .integral = 0, .derivative = 0, .target = 0, .sensor = 0
+  };
+  */
 
   quadLeftDrive = encoderInit(QuadLeft1, QuadLeft2, false);
   quadRightDrive = encoderInit(QuadRight1, QuadRight2, true);
+  mainQuad = encoderInit(mainQuad1, mainQuad2, false);
 
   TaskHandle secondTH = taskRunLoop(debug, 200);
   BL.Kp = 0.075;
@@ -65,4 +74,12 @@ void initialize(){
   T.Kp = 0.0;
   T.Ki = 0.0;
   T.Kd = 0.0;
+
+  RD.Kp = 0.0;
+  RD.Ki = 0.0;
+  RD.Kd = 0.0;
+
+  LD.Kp = 0.0;
+  LD.Ki = 0.0;
+  LD.Kd = 0.0;
 }

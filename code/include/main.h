@@ -55,6 +55,7 @@ extern "C" {
 //Quad declarations
 Encoder quadLeftDrive;
 Encoder quadRightDrive;
+Encoder mainQuad;
 #include <custom.h>
 
 //#define AUTO_DEBUG
@@ -119,7 +120,35 @@ void initialize();
  *
  * This task should never exit; it should end with some kind of infinite loop, even if empty.
  */
-void operatorControl();
+ /*
+
+void driveStuff(){
+  if(abs(joystickGetAnalog(1, 2)) > 10){
+    motorSet(driveLeft, joystickGetAnalog(1, 2));
+  }
+  else{
+    motorSet(driveLeft, 0);
+  }
+
+  if(abs(joystickGetAnalog(1, 3)) > 10){
+    motorSet(driveRight, joystickGetAnalog(1, 3));
+  }
+  else{
+    motorSet(driveRight, 0);
+  }
+}
+
+void liftStuff(){
+  //put lift height setting logic here. GLHF
+}
+
+void operatorControl(){
+  while(true){
+    driveStuff();
+
+  }
+};
+*/
 
 // End C++ export structure
 #ifdef __cplusplus
