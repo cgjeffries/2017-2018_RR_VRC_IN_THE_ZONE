@@ -58,28 +58,35 @@ void initialize(){
   };
   */
 
-  quadLeftDrive = encoderInit(QuadLeft1, QuadLeft2, false);
-  quadRightDrive = encoderInit(QuadRight1, QuadRight2, true);
+  quadLeftDrive = encoderInit(QuadLeft1, QuadLeft2, true);
+  quadRightDrive = encoderInit(QuadRight1, QuadRight2, false);
   mainQuad = encoderInit(mainQuad1, mainQuad2, false);
 
   TaskHandle secondTH = taskRunLoop(debug, 200);
-  BL.Kp = 0.075;
-  BL.Ki = 0.0;
+  BL.target = BR.target = LIFT_STANDARD_POS;
+  BL.Kp = 0.3;
+  BL.Ki = 0.01;
   BL.Kd = 0.0;
+  BL.MAX_ERROR = 35;
 
-  BR.Kp = 0.075;
-  BR.Ki = 0.0;
+  BR.Kp = 0.3;
+  BR.Ki = 0.01;
   BR.Kd = 0.0;
+  BR.MAX_ERROR = 35;
 
-  T.Kp = 0.0;
-  T.Ki = 0.0;
+  T.target = CB_STANDARD_POS;
+  T.Kp = 0.11;
+  T.Ki = 0.004;
   T.Kd = 0.0;
+  T.MAX_ERROR = 30;
 
-  RD.Kp = 0.0;
+  RD.Kp = 0.5;
   RD.Ki = 0.0;
   RD.Kd = 0.0;
+  RD.MAX_ERROR = 50;
 
-  LD.Kp = 0.0;
+  LD.Kp = 0.3;
   LD.Ki = 0.0;
   LD.Kd = 0.0;
+  LD.MAX_ERROR  = 50;
 }

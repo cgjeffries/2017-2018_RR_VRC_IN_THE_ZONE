@@ -1,5 +1,4 @@
 #include "main.h"
-#include "math.h"
 
 void setTop(int speed){
   motorSet(chainLeft, speed);
@@ -8,7 +7,7 @@ void setTop(int speed){
 
 void updateSensors(){
   BL.sensor = analogRead(BLPot);
-  BR.sensor = analogRead(BRPot);
+  BR.sensor = analogRead(BRPot)+15;
   T.sensor = analogRead(CBPot);
   LD.sensor = encoderGet(quadLeftDrive);
   RD.sensor = encoderGet(quadRightDrive);
@@ -18,8 +17,8 @@ double PIDdo(PID *thing){
   updateSensors();
   thing->error  = thing->target - thing->sensor;
   if(fabs(thing->error) < 200){
-    if(fabs(thing->error) < 8){
-      //thing->integral = 0;
+    if(fabs(thing->error) < thing->MAX_ERROR){
+      thing->integral = 0;
     }
     else{
       thing->integral += thing->error;
@@ -31,21 +30,64 @@ double PIDdo(PID *thing){
   //may need integral = 0 stuff
   thing->derivative = thing->error - thing->previous_error;
   thing->previous_error = thing->error;
-  return (thing->Kp*thing->error + thing->Ki*thing->integral + thing->Kd*thing->derivative);
+  if(fabs(thing->error) < 20){
+    if(thing->target < 1000){
+      return 8;
+    }
+    return 13;
+  }
+  else{
+    int output = (thing->Kp*thing->error + thing->Ki*thing->integral + thing->Kd*thing->derivative);
+    if(output > 127){
+      return 127;
+    }
+    else if(output < -127){
+      return -127;
+    }
+    return output;
+  }
 }
 
 void mainLoopOp(){
-  if(!(digitalRead(12) || digitalRead(11))){
-    motorSet(liftLeft, ((int) PIDdo(&BL)));
-    motorSet(liftRight, ((int) PIDdo(&BR)));
-    setTop((int) PIDdo(&T));
+  if(true){
+    if(!liftDisabled){
+      if(joystickGetDigital(1, 8, JOY_DOWN) && manual){
+        setLiftLeft(0);
+        setLiftRight(0);
+      }
+      else{
+        setLiftLeft((int) PIDdo(&BL) + 12);
+        setLiftRight((int) PIDdo(&BR) + 12);
+      }
+      if(joystickGetDigital(1, 8, JOY_UP) && manual){
+        setChain(0);
+      }
+      else{
+        if(T.target < 1500){
+          setChain((int) PIDdo(&T) + 15);
+        }
+        else{
+          setChain((int) PIDdo(&T) - 20);
+        }
+      }
+    }
   }
 }
 void mainLoopAuto(){
-  motorSet(liftLeft, ((int) PIDdo(&BL)));
-  motorSet(liftRight, ((int) PIDdo(&BR)));
-  setTop((int) PIDdo(&T));
-  setDriveLeft((int) PIDdo(&LD));
-  setDriveRight((int) PIDdo(&RD));
+  setLiftLeft((int) PIDdo(&BL));
+  setLiftRight((int)PIDdo(&BR));
+  setChain((int) PIDdo(&T));
+  if((LD.sensor>RD.sensor && LD.error > 500) && !(LD.target > 0 && RD.target < 0)){
+    setDriveLeft((int) (PIDdo(&LD) * 0.4));
+    setDriveRight((int) PIDdo(&RD));
+  }
+  else if((LD.sensor<RD.sensor && LD.error > 500) && !(LD.target < 0 && RD.target > 0)){
+    setDriveRight((int) (PIDdo(&RD) * 0.4));
+    setDriveLeft((int) PIDdo(&LD));
+  }
+  else{
+    setDriveLeft((int) PIDdo(&LD));
+    setDriveRight((int) PIDdo(&RD));
+  }
 
 }

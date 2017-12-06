@@ -74,7 +74,7 @@ int chainTarget[16]={
  * This task should never exit; it should end with some kind of infinite loop, even if empty.
  */
  void old(){
-	BL.target = BR.target = 1500;
+	BL.target = BR.target = 1700;
 
  	BL.Kp = 0.2;
  	BL.Ki = 0.01;
@@ -143,7 +143,18 @@ int chainTarget[16]={
  	taskDelete(firstTH); //just to remove the stupid "unused variable" thing from above
  	//taskDelete(secondTH);
  }
+ bool liftDisabled = false;
 void operatorControl() {
+  if(!digitalRead(10)){
+    while(!joystickGetDigital(1, 8, JOY_DOWN)){
+      delay(20);
+    }
+    autonomousAlt();
+    while(true){
+      delay(20);
+    }
+  }
+  /*
 	BL.target = BR.target = 1500;
 
 	BL.Kp = 0.2;
@@ -157,8 +168,53 @@ void operatorControl() {
 	T.Kp = 0.0;
 	T.Ki = 0.0;
 	T.Kd = 0.0;
-  //TaskHandle firstTH = taskRunLoop(mainLoopOp, 20);
+  */
+  TaskHandle firstTH = taskRunLoop(mainLoopOp, 20);
+  TaskHandle secondTH = taskCreate(awesomeLoop, TASK_DEFAULT_STACK_SIZE, NULL, TASK_PRIORITY_DEFAULT);
+  bool temporary = false;
+  bool temporary2 = false;
+  bool temporary3 = false;
+  bool temporary4 = false;
 	while(true){
+    if(joystickGetDigital(1, 7, JOY_LEFT) && !temporary){
+      manual = !manual;
+      temporary = true;
+    }
+    else if(!joystickGetDigital(1, 7, JOY_LEFT) && temporary){
+      temporary = false;
+    }
+    /*
+    if(joystickGetDigital(1, 7, JOY_RIGHT) && !temporary2){
+      liftDisabled = !liftDisabled;
+      temporary2 = true;
+    }
+    else if(!joystickGetDigital(1, 7, JOY_RIGHT) && temporary2){
+      temporary2 = false;
+    }
+    */
+
+    if(joystickGetDigital(1, 8, JOY_UP) && !temporary3){
+      if(!manual){
+        coneCount++;
+      }
+      temporary3 = true;
+    }
+    else if(!joystickGetDigital(1, 8, JOY_UP) && temporary3){
+      temporary3 = false;
+    }
+
+    if(joystickGetDigital(1, 8, JOY_DOWN) && !temporary4){
+      if(coneCount > 0 && !manual){
+        coneCount--;
+      }
+      temporary4 = true;
+    }
+    else if(!joystickGetDigital(1, 8, JOY_DOWN) && temporary4){
+      temporary4 = false;
+    }
+
+
+
     if(!digitalRead(11)){
       motorTest();
       delay(20);
