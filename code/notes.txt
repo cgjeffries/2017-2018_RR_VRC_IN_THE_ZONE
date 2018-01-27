@@ -8,3 +8,11 @@
 8
 9
 10 r
+
+
+
+1 cone pylon:
+lift: 1750
+CB: 2850
+
+order #: 11228251

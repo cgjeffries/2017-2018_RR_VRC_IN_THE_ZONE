@@ -1,9 +1,11 @@
 #include "main.h"
 void debug(){
   printf("\n\n\n\n\n\n\n\n\n\n\n\n");
+  printf("Autonomous: %d\n", analogRead(5));
   printf("Estop? %d\n", eStop);
   printf("manual? %d\n", manual);
   printf("Cones: %d\n", coneCount);
+  printf("PylonCones: %d\n", coneCountPylon);
   printf("Auto: LD: %d LDError: %f RD: %d RDError %f\n", (int)LD.sensor, LD.error, (int)RD.sensor, RD.error);
   printf("Sensors: LPot:%d RPot:%d CBPot:%d\n", analogRead(BLPot), analogRead(BRPot), analogRead(CBPot));
   printf("Lift Target: %f\n", BL.target);

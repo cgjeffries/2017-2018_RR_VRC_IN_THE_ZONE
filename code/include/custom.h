@@ -23,6 +23,7 @@
 #define QuadLeft2 4
 #define QuadRight1 1
 #define QuadRight2 2
+#define PylonButton 5
 #define mainQuad1 7
 #define mainQuad2 8
 
@@ -56,9 +57,11 @@ void mainLoopOp();
 void mainLoopAuto();
 void debug();
 void awesomeLoop(void *ignore);
+void playSpeaker(void *ignore);
 
 void setDriveLeft(int speed);
 void setDriveRight(int speed);
+void setDriveAll(int speed);
 void setLiftLeft(int speed);
 void setLiftRight(int speed);
 void setChainLeft(int speed);
@@ -77,25 +80,42 @@ void autonomousAlt();
 //Position Definitions
 #define CB_STANDARD_POS 200
 #define CB_HALF_POS 1000
-#define CB_VERTICAL_POS 3000
+#define CB_VERTICAL_POS 2900
 #define CB_VERTICAL_POS2 2950
-#define LIFT_STANDARD_POS 1650
+#define LIFT_STANDARD_POS 1600
 #define LIFT_DROP 175
 #define ONE_CONE_STACK_HEIGHT 1550
 #define CONE_HEIGHT 80
-#define CLAW_CLOSE_TIME 750
-#define CLAW_OPEN_TIME 600
+#define CLAW_CLOSE_TIME 250
+#define CLAW_OPEN_TIME 250
 #define LIFT_MAX 2500
 #define LIFT_MIN 1450
+#define ONE_CONE_PYLON_STACK_HEIGHT 1750
+#define CB_VERTICAL_PYLON 2775
 
 #define CHAIN_MAX 3900
 #define CHAIN_MIN 100
 
+extern int stuff;
 extern int chainTarget[16];
 extern int liftTarget[16];
 extern int coneCount;
+extern int coneCountPylon;
 extern bool basePresent;
 extern bool isStacking;
 extern bool manual;
 extern bool liftDisabled;
 extern bool eStop;
+extern bool autoPIDDisable;
+extern TaskHandle secondTH;
+extern int auton;
+extern char *autonName[4];
+extern int selectedAuto;
+
+//Auton definitions
+#define NOTHING 0
+#define BASE_CONE_20_BLUE 1
+#define BASE_CONE_20_RED 2
+#define PYLON_CONE 3
+
+#define ARRAY_SIZE(a) (sizeof(a) / sizeof((a)[0]))

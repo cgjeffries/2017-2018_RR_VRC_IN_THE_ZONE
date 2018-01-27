@@ -31,7 +31,7 @@ double PIDdo(PID *thing){
   thing->derivative = thing->error - thing->previous_error;
   thing->previous_error = thing->error;
   if(fabs(thing->error) < 20){
-    if(thing->target < 1000){
+    if(thing->target < 1000){//may need to be updated to reflect current pot values
       return 8;
     }
     return 13;
@@ -63,8 +63,11 @@ void mainLoopOp(){
         setChain(0);
       }
       else{
-        if(T.target < 1500){
-          setChain((int) PIDdo(&T) + 15);
+        if(T.target < 2500){
+          setChain((int) PIDdo(&T) + 5);
+        }
+        else if(T.target > 2500 && T.target < 2900){
+          setChain((int) PIDdo(&T));
         }
         else{
           setChain((int) PIDdo(&T) - 20);
@@ -77,17 +80,19 @@ void mainLoopAuto(){
   setLiftLeft((int) PIDdo(&BL));
   setLiftRight((int)PIDdo(&BR));
   setChain((int) PIDdo(&T));
-  if((LD.sensor>RD.sensor && LD.error > 500) && !(LD.target > 0 && RD.target < 0)){
-    setDriveLeft((int) (PIDdo(&LD) * 0.4));
-    setDriveRight((int) PIDdo(&RD));
-  }
-  else if((LD.sensor<RD.sensor && LD.error > 500) && !(LD.target < 0 && RD.target > 0)){
-    setDriveRight((int) (PIDdo(&RD) * 0.4));
-    setDriveLeft((int) PIDdo(&LD));
-  }
-  else{
-    setDriveLeft((int) PIDdo(&LD));
-    setDriveRight((int) PIDdo(&RD));
+  if(!autoPIDDisable){
+    if((LD.sensor>RD.sensor && LD.error > 500) && !(LD.target > 0 && RD.target < 0)){
+      setDriveLeft((int) (PIDdo(&LD) * 0.4));
+      setDriveRight((int) PIDdo(&RD));
+    }
+    else if((LD.sensor<RD.sensor && LD.error > 500) && !(LD.target < 0 && RD.target > 0)){
+      setDriveRight((int) (PIDdo(&RD) * 0.4));
+      setDriveLeft((int) PIDdo(&LD));
+    }
+    else{
+      setDriveLeft((int) PIDdo(&LD));
+      setDriveRight((int) PIDdo(&RD));
+    }
   }
 
 }
