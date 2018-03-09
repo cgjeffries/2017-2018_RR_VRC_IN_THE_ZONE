@@ -18,15 +18,27 @@ int coneCountPylon = 0;
 bool basePresent = false;
 bool isStacking  = false;
 TaskHandle secondTH;
+TaskHandle firstTHstuff;
 
 //Global Arrays
+int baseLiftCounts = 0;
+
+void updateI2C(){
+  unsigned long now = millis();
+  taskDelayUntil(&now, 50);
+  imeGet(0, &baseLiftCounts);
+  if(joystickGetDigital(2, 7, JOY_DOWN)){
+    imeReset(0);
+  }
+}
 
 
 
  bool liftDisabled = false;
 void operatorControl(){
+  boolAuton = false;
 
-  TaskHandle firstTH = taskRunLoop(mainLoopOp, 20);
+  firstTHstuff = taskRunLoop(mainLoopOp, 20);
   secondTH = taskCreate(awesomeLoop, TASK_DEFAULT_STACK_SIZE, NULL, TASK_PRIORITY_DEFAULT);
   //sTaskHandle thirdTH = taskCreate(playSpeaker, TASK_DEFAULT_STACK_SIZE, NULL, TASK_PRIORITY_DEFAULT);
   bool temporary = false;
@@ -36,6 +48,10 @@ void operatorControl(){
   bool temporary5 = false;
   bool temporary6 = false;
 	while(true){
+    unsigned long now = millis();
+
+    updateI2C();
+
     if(joystickGetDigital(1, 7, JOY_LEFT) && !temporary){
       manual = !manual;
       temporary = true;
@@ -101,6 +117,7 @@ void operatorControl(){
     else{
       eStop = false;
     }
+
 
 
 

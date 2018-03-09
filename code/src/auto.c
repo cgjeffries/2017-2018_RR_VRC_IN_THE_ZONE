@@ -50,35 +50,39 @@ void autonomousBC20B(){
   BL.target = BR.target = 0;
   LD.target = RD.target = 0;
   delay(20);
-  setClaw(-15);
+  setClaw(-20);
   encoderReset(quadLeftDrive);
   encoderReset(quadRightDrive);
-  T.target = CB_VERTICAL_POS-100;
-  BL.target = BR.target = 2000;
+  T.target = CB_VERTICAL_POS;
+  BL.target = BR.target = 2100;
+  RD.Kp = LD.Kp = 0.15;
   delay(50);
-  TaskHandle blaTH = taskRunLoop(mainLoopAuto, 20);
-
-
-
-  delay(500);
-  setBase(-127);
+  setDriveAll(30);
   delay(100);
+  TaskHandle blaTH = taskRunLoop(mainLoopAuto, 20);
+  delay(600);
+
+  setBase(-127);
+  delay(500);
   RD.target = 1550;
   LD.target = 1550;
+  delay(20);
+  // TaskHandle blaTH = taskRunLoop(mainLoopAuto, 20);
   delay(1000);
-  setBase(-5);
+  setBase(-10);
   while(RD.error > 100){
     delay(20);
   }
+  delay(500);
   setBase(127);
   delay(1750);
-  setBase(0);
-  BL.target = BR.target = ONE_CONE_STACK_HEIGHT;
+  setBase(10);
+  BL.target = BR.target = 1400;
     delay(25);
-  while(fabs(BL.error) > 30){
+  while(fabs(BL.error) > 60){
     delay(20);
   }
-  delay(500);
+  delay(1000);
   setClaw(127);
   delay(250);
   setClaw(10);
@@ -86,6 +90,7 @@ void autonomousBC20B(){
   delay(200);
   encoderReset(quadLeftDrive);
   encoderReset(quadRightDrive);
+    RD.Kp = LD.Kp = 0.3;
   LD.target = -1450;
   RD.target = -1450;
   delay(25);
@@ -96,8 +101,8 @@ void autonomousBC20B(){
 
   encoderReset(quadLeftDrive);
   encoderReset(quadRightDrive);
-  LD.target = 230;
-  RD.target = -230;
+  LD.target = 190;
+  RD.target = -190;
   delay(25);
 
   while(LD.error > 50 || RD.error < -50){
@@ -132,13 +137,125 @@ void autonomousBC20B(){
   autoPIDDisable = true;
   delay(25);
   setDriveAll(127);
-  delay(1000);
+  delay(500);
   setBase(-127);
-  delay(1000);
+  delay(250);
+  setBase(0);
+  delay(1250);
   setBase(0);
   setDriveAll(-127);
   delay(1000);
   setDriveAll(0);
+  delay(300);
+  if(false){
+    setDriveAll(40);
+    delay(1500);
+    setDriveAll(0);
+
+    encoderReset(quadLeftDrive);
+    encoderReset(quadRightDrive);
+    LD.target = -330;
+    RD.target = 330;
+    delay(25);
+    autoPIDDisable = false;
+    delay(30);
+    while(RD.error > 50 || LD.error < -50){
+      delay(20);
+    }
+    delay(20);
+    setBase(-127);
+    delay(1200);
+    setBase(-10);
+    delay(20);
+
+    encoderReset(quadLeftDrive);
+    encoderReset(quadRightDrive);
+    RD.target = 100;
+    LD.target = 100;
+    BL.target = BR.target = 1900;
+    delay(25);
+    while(LD.error > 50 || RD.error > 50){
+      delay(20);
+    }
+    encoderReset(quadLeftDrive);
+    encoderReset(quadRightDrive);
+    LD.target = -350;
+    RD.target = 350;
+    delay(25);
+    autoPIDDisable = false;
+    delay(30);
+    while(RD.error > 50 || LD.error < -50){
+      delay(20);
+    }
+
+    encoderReset(quadLeftDrive);
+    encoderReset(quadRightDrive);
+    RD.target = 600;
+    LD.target = 600;
+    BL.target = BR.target = 1900;
+    delay(25);
+    while(LD.error > 50 || RD.error > 50){
+      delay(20);
+    }
+
+    delay(500);
+    setBase(127);
+    delay(1300);
+    setBase(0);
+
+    encoderReset(quadLeftDrive);
+    encoderReset(quadRightDrive);
+    RD.target = -600;
+    LD.target = -600;
+    BL.target = BR.target = 1900;
+    delay(25);
+    while(LD.error < -50 || RD.error < -50){
+      delay(20);
+    }
+
+    encoderReset(quadLeftDrive);
+    encoderReset(quadRightDrive);
+    LD.target = -330;
+    RD.target = 330;
+    delay(25);
+    autoPIDDisable = false;
+    delay(30);
+    while(RD.error > 50 || LD.error < -50){
+      delay(20);
+    }
+
+    encoderReset(quadLeftDrive);
+    encoderReset(quadRightDrive);
+    RD.target = 200;
+    LD.target = 200;
+    BL.target = BR.target = 1900;
+    delay(25);
+    while(LD.error > 50 || RD.error > 50){
+      delay(20);
+    }
+
+    encoderReset(quadLeftDrive);
+    encoderReset(quadRightDrive);
+    LD.target = -330;
+    RD.target = 330;
+    delay(25);
+    autoPIDDisable = false;
+    delay(30);
+    while(RD.error > 50 || LD.error < -50){
+      delay(20);
+    }
+    autoPIDDisable = true;
+    delay(30);
+    setDriveAll(30);
+    delay(500);
+    setBase(-127);
+    delay(1300);
+    setBase(0);
+    setDriveAll(-127);
+    delay(500);
+    setDriveAll(0);
+
+  }
 
 }
 
@@ -146,30 +263,34 @@ void autonomousBC20R(){
   BL.target = BR.target = 0;
   LD.target = RD.target = 0;
   delay(20);
-  setClaw(-15);
+  setClaw(-20);
   encoderReset(quadLeftDrive);
   encoderReset(quadRightDrive);
-  T.target = CB_VERTICAL_POS-100;
-  TaskHandle blaTH = taskRunLoop(mainLoopAuto, 20);
-
-  BL.target = BR.target = 2000;
-
-  delay(500);
-  setBase(-127);
+  T.target = CB_VERTICAL_POS;
+  BL.target = BR.target = 2100;
+  RD.Kp = LD.Kp = 0.15;
+  delay(50);
+  setDriveAll(30);
   delay(100);
+  TaskHandle blaTH = taskRunLoop(mainLoopAuto, 20);
+  delay(600);
+
+
+  setBase(-127);
+  delay(500);
   RD.target = 1550;
   LD.target = 1550;
-  delay(800);
-  setBase(-5);
+  delay(1000);
+  setBase(-10);
   while(RD.error > 100){
     delay(20);
   }
   setBase(127);
-  delay(1200);
+  delay(1750);
   setBase(0);
-  BL.target = BR.target = ONE_CONE_STACK_HEIGHT-75;
+  BL.target = BR.target = 1400;
     delay(25);
-  while(fabs(BL.error) > 30){
+  while(fabs(BL.error) > 60){
     delay(20);
   }
   delay(500);
@@ -177,11 +298,18 @@ void autonomousBC20R(){
   delay(250);
   setClaw(10);
 
-  delay(200);
+  delay(160);
+  autoPIDDisable = true;
+  delay(40);
+  setDriveLeft(-30);
+  delay(100);
+  setDriveLeft(0);
+  autoPIDDisable = false;
   encoderReset(quadLeftDrive);
   encoderReset(quadRightDrive);
   LD.target = -1450;
   RD.target = -1450;
+  RD.Kp = LD.Kp = 0.3;
   delay(25);
 
   while(LD.error < -50 || RD.error < -50){
@@ -190,8 +318,8 @@ void autonomousBC20R(){
 
   encoderReset(quadLeftDrive);
   encoderReset(quadRightDrive);
-  LD.target = -230;
-  RD.target = 230;
+  LD.target = -190;
+  RD.target = 190;
   delay(25);
 
   while(LD.error < -50 || RD.error > 50){
@@ -203,8 +331,8 @@ void autonomousBC20R(){
 
   encoderReset(quadLeftDrive);
   encoderReset(quadRightDrive);
-  RD.target = -500;
-  LD.target = -500;
+  RD.target = -600;
+  LD.target = -600;
   BL.target = BR.target = 1900;
   delay(25);
   while(LD.error < -50 || RD.error < -50){
@@ -226,17 +354,21 @@ void autonomousBC20R(){
   autoPIDDisable = true;
   delay(25);
   setDriveAll(127);
-  delay(1000);
+  delay(500);
   setBase(-127);
-  delay(1100);
+  delay(250);
+  setBase(0);
+  delay(1250);
   setBase(0);
   setDriveAll(-127);
-  delay(1200);
+  delay(1000);
   setDriveAll(0);
+  delay(300);
 
 }
 
 void autonomousPC(){
+  setClaw(-15);
   BL.target = BR.target = 0;
   LD.target = RD.target = 0;
   encoderReset(quadLeftDrive);
@@ -252,10 +384,11 @@ void autonomousPC(){
   BL.target = BR.target = ONE_CONE_PYLON_STACK_HEIGHT-LIFT_DROP;
   delay(500);
   setClaw(127);
-  delay(CLAW_OPEN_TIME);
-  setClaw(10);
+  delay(500);
+
   BL.target = BR.target = ONE_CONE_PYLON_STACK_HEIGHT+100;
   delay(1000);
+  setClaw(10);
   autoPIDDisable = true;
   delay(50);
   setDriveAll(-127);
@@ -284,8 +417,19 @@ void runAway(){
   setDriveAll(0);
 }
 
+bool boolAuton = false;
+
 void autonomous() {
+  boolAuton = true;
   taskDelete(secondTH); //For some reason this is necessary. PROS plz fix.
+  if(firstTHstuff == 0){
+
+  }
+  else{
+    //taskSuspend(firstTHstuff);
+  }
+  //taskSuspend(firstTH);
+  delay(20);
   //TaskHandle haTH = taskRunLoop(debug, 500);
   BL.target = BR.target = LIFT_STANDARD_POS;
   LD.target = RD.target = 0;

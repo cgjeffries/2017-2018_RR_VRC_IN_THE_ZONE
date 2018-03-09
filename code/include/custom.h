@@ -1,6 +1,7 @@
 //Motors
-#define baseRight 1
-#define baseLeft 10
+#define base 5
+#define baseRight 1   //nope
+#define baseLeft 10   //nope
 #define liftLeft 2
 #define liftRight 9
 #define chainLeft 3
@@ -8,6 +9,8 @@
 
 #define driveLeft 4
 #define driveRight 7
+#define driveLeft2 10
+#define driveRight2 1
 
 #define claw 6
 
@@ -78,20 +81,20 @@ void motorTest();
 void autonomousAlt();
 
 //Position Definitions
-#define CB_STANDARD_POS 200
+#define CB_STANDARD_POS 250
 #define CB_HALF_POS 1000
-#define CB_VERTICAL_POS 2900
-#define CB_VERTICAL_POS2 2950
+#define CB_VERTICAL_POS 2860
+#define CB_VERTICAL_POS2 2860
 #define LIFT_STANDARD_POS 1600
-#define LIFT_DROP 175
-#define ONE_CONE_STACK_HEIGHT 1550
+#define LIFT_DROP 80
+#define ONE_CONE_STACK_HEIGHT 1370
 #define CONE_HEIGHT 80
 #define CLAW_CLOSE_TIME 250
 #define CLAW_OPEN_TIME 250
 #define LIFT_MAX 2500
 #define LIFT_MIN 1450
 #define ONE_CONE_PYLON_STACK_HEIGHT 1750
-#define CB_VERTICAL_PYLON 2775
+#define CB_VERTICAL_PYLON 2350
 
 #define CHAIN_MAX 3900
 #define CHAIN_MIN 100
@@ -108,9 +111,13 @@ extern bool liftDisabled;
 extern bool eStop;
 extern bool autoPIDDisable;
 extern TaskHandle secondTH;
+extern TaskHandle firstTHstuff;
 extern int auton;
 extern char *autonName[4];
 extern int selectedAuto;
+extern int baseLiftCounts;
+
+extern bool boolAuton;
 
 //Auton definitions
 #define NOTHING 0

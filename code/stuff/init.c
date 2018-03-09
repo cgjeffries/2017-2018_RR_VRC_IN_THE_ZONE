@@ -77,6 +77,7 @@ void lcdAutonomousSelection(void *params) {
 }
 
 void initialize() {
+
 	lcdInit(uart1);
 	taskCreate(lcdAutonomousSelection, TASK_DEFAULT_STACK_SIZE, NULL, TASK_PRIORITY_DEFAULT);
 

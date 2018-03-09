@@ -56,18 +56,42 @@ void mainLoopOp(){
         setLiftRight(0);
       }
       else{
-        setLiftLeft((int) PIDdo(&BL) + 12);
-        setLiftRight((int) PIDdo(&BR) + 12);
+        if(BL.target < 1450){
+          setLiftLeft((int) PIDdo(&BL) + 0);
+          setLiftRight((int) PIDdo(&BR) + 0);
+        }
+        else{
+          setLiftLeft((int) PIDdo(&BL) + 8);
+          setLiftRight((int) PIDdo(&BR) + 8);
+        }
       }
       if(joystickGetDigital(1, 8, JOY_UP) && manual){
         setChain(0);
       }
       else{
         if(T.target < 2500){
-          setChain((int) PIDdo(&T) + 5);
+          if(T.target < 400){
+            setChain((int) PIDdo(&T));
+          }
+          else{
+            setChain((int) PIDdo(&T) + 5);
+          }
         }
         else if(T.target > 2500 && T.target < 2900){
-          setChain((int) PIDdo(&T));
+          if(T.error < 700 && T.error > 0){
+            int value = PIDdo(&T);
+            if (value > 50) {
+              setChain(50);
+            }else{
+              setChain(value);
+            }
+          }
+          else if(T.error < 0){
+            setChain(PIDdo(&T) - 15);
+          }
+          else{
+            setChain((int) PIDdo(&T)-5);
+          }
         }
         else{
           setChain((int) PIDdo(&T) - 20);
@@ -94,5 +118,4 @@ void mainLoopAuto(){
       setDriveRight((int) PIDdo(&RD));
     }
   }
-
 }

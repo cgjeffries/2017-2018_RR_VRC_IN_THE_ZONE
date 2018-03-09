@@ -1,6 +1,7 @@
 #include "main.h"
 void debug(){
   printf("\n\n\n\n\n\n\n\n\n\n\n\n");
+  printf("BaseLift: %d\n", baseLiftCounts);
   printf("Autonomous: %d\n", analogRead(5));
   printf("Estop? %d\n", eStop);
   printf("manual? %d\n", manual);

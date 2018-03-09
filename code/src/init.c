@@ -20,7 +20,8 @@
  * states (digitalWrite()) of limit switches, push buttons, and solenoids. It can also safely
  * configure a UART port (usartOpen()) but cannot set up an LCD (lcdInit()).
  */
-void initializeIO() {
+void initializeIO(){
+  //watchdogInit();
   pinMode(button1, INPUT);
   pinMode(button2, INPUT);
 }
@@ -198,7 +199,7 @@ void lcdAutonomousSelection(void *params) {
 
 
 void initialize(){
-
+	//imeInitializeAll();
 
 
 
@@ -221,19 +222,19 @@ void initialize(){
   };
   */
 
-  quadLeftDrive = encoderInit(QuadLeft1, QuadLeft2, true);
-  quadRightDrive = encoderInit(QuadRight1, QuadRight2, false);
+  quadLeftDrive = encoderInit(QuadLeft1, QuadLeft2, false);
+  quadRightDrive = encoderInit(QuadRight1, QuadRight2, true);
   mainQuad = encoderInit(mainQuad1, mainQuad2, false);
 
-  TaskHandle jkjkjkjTH = taskRunLoop(debug, 500);
+  TaskHandle jkjkjkjTH = taskRunLoop(debug, 200);
   BL.target = BR.target = LIFT_STANDARD_POS;
-  BL.Kp = 0.3;
-  BL.Ki = 0.01;
+  BL.Kp = 0.25;
+  BL.Ki = 0.005;
   BL.Kd = 0.0;
   BL.MAX_ERROR = 35;
 
-  BR.Kp = 0.3;
-  BR.Ki = 0.01;
+  BR.Kp = 0.25;
+  BR.Ki = 0.005;
   BR.Kd = 0.0;
   BR.MAX_ERROR = 35;
 
@@ -241,7 +242,7 @@ void initialize(){
   T.Kp = 0.11;
   T.Ki = 0.004;
   T.Kd = 0.0;
-  T.MAX_ERROR = 30;
+  T.MAX_ERROR = 50;
 
   RD.Kp = 0.3;
   RD.Ki = 0.03;

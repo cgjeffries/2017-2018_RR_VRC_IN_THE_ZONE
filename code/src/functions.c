@@ -3,19 +3,21 @@
 
 void setDriveLeft(int speed){
   motorSet(driveLeft, speed);
+  motorSet(driveLeft2, -speed);
 }
 void setDriveRight(int speed){
   motorSet(driveRight, -speed);
+  motorSet(driveRight2, -speed);
 }
 void setDriveAll(int speed){
   setDriveLeft(speed);
   setDriveRight(speed);
 }
 void setLiftLeft(int speed){
-  motorSet(liftLeft, -speed);
+  motorSet(liftLeft, speed);
 }
 void setLiftRight(int speed){
-  motorSet(liftRight, speed);
+  motorSet(liftRight, -speed);
 }
 void setChainLeft(int speed){
   motorSet(chainLeft, -speed);
@@ -38,14 +40,18 @@ void setClaw(int speed){
   motorSet(claw, -speed);
 }
 void setBaseRight(int speed){
-  motorSet(baseRight, -speed);
+  motorSet(base, -speed);
 }
 void setBaseLeft(int speed){
-  motorSet(baseLeft, -speed);
+  motorSet(base, -speed);
 }
 void setBase(int speed){
-  setBaseLeft(speed);
-  setBaseRight(speed);
+  if(baseLiftCounts > 700 && baseLiftCounts <= 1030){
+    setBaseLeft(0);
+    setBaseRight(0);
+  }
+    setBaseLeft(speed);
+    setBaseRight(speed);
 }
 
 int brakingpower = 0;
@@ -205,7 +211,7 @@ void chainTo(int pos){
     T.target = pos;
     delay(20);
     if(pos == CB_HALF_POS){
-      while((fabs(T.error) > 300) && !eStop){
+      while((fabs(T.error) > 200) && !eStop){
         delay(20);
       }
     }
@@ -221,9 +227,9 @@ void baseDown(){
   stuff = 1;
   setBase(-127);
   BL.target = BR.target = (BL.target + 100);
-  delay(250);
+  delay(500);
   T.target = 2300;
-  delay(200);
+  delay(500);
   BL.target = BR.target = (BL.target - 300);
   delay(300);
   setBase(0);
@@ -232,7 +238,7 @@ void baseDown(){
 }
 void holdCone(){
   stuff = 1;
-  int height = ONE_CONE_STACK_HEIGHT + (coneCount*CONE_HEIGHT) - 50;
+  int height = ONE_CONE_STACK_HEIGHT + (coneCount*CONE_HEIGHT) + 50;
   //setClaw(-127);
   //liftTo(1450);
   //liftTo(1500);
@@ -242,19 +248,26 @@ void holdCone(){
   delay(20);
   chainTo(CB_HALF_POS);
   liftTo(height);
+
   if(coneCount > 6){
-    chainTo(CB_VERTICAL_POS2+375);
+    if(coneCount > 10){
+      chainTo(CB_VERTICAL_POS2 + 100);
+    }
+    else{
+      chainTo(CB_VERTICAL_POS2+100);
+    }
   }
   else{
     chainTo(CB_VERTICAL_POS);
   }
   delay(250);
+  delay(400);
   if(coneCount > 1){
-    liftTo(height-400);
+    //liftTo(height-450);
   }
   else{
     if(coneCount > 1){
-      liftTo(height-150);
+      //liftTo(height-150);
     }
   }
   while(joystickGetDigital(1, 5, JOY_UP)){
@@ -266,34 +279,47 @@ bool held = false;
 void stackCone(int delayReduction, int heightReduction){
   stuff = 1;
   int height;
-  if(coneCount >= 3){
-    height = ONE_CONE_PYLON_STACK_HEIGHT + (coneCount*CONE_HEIGHT) - 290;
+  if(coneCount >= 4){
+    if(coneCount >= 10){
+      height = ONE_CONE_STACK_HEIGHT + (coneCount*CONE_HEIGHT) - 90;
+    }
+    else{
+      height = ONE_CONE_STACK_HEIGHT + (coneCount*CONE_HEIGHT) - 130;
+    }
   }
   else{
-    height = ONE_CONE_STACK_HEIGHT; //+ (coneCount*CONE_HEIGHT);
+    if(coneCount == 3){
+      height = ONE_CONE_STACK_HEIGHT+25;
+    }
+    else{
+      height = ONE_CONE_STACK_HEIGHT; //+ (coneCount*CONE_HEIGHT);
+    }
   }
   coneCount++;
   setClaw(-127);
   //liftTo(1450);
-  liftToPrecise(1400-heightReduction);
-  if(!held){
+  liftToPrecise(1360-heightReduction);
+  //if(!held){
     delay(CLAW_CLOSE_TIME-delayReduction);
     held = false;
-  }
+  //}
   setClaw(-10);
-  if(coneCount == 1){
-    BL.target = BR.target = 1400;
+  if(coneCount < 999){
+    BL.target = BR.target = height;
   }
   else{
-    BL.target = BR.target = height-250;
+    BL.target = BR.target = height-175;
   }
   delay(20);
-  chainTo(CB_HALF_POS);
-  while(BL.error > 700){
+  //if(T.target < CB_HALF_POS){
+    //chainTo(CB_HALF_POS);
+  //}
+  T.target = CB_HALF_POS;
+  while(BL.error > 500){
     delay(20);
   }
-  if(coneCount > 6){
-    T.target = CB_VERTICAL_POS2;
+  if(coneCount > 8){
+    T.target = CB_VERTICAL_POS2+130;
   }
   else{
     T.target = CB_VERTICAL_POS;
@@ -306,8 +332,8 @@ void stackCone(int delayReduction, int heightReduction){
     chainTo(CB_VERTICAL_POS);
   }
   */
-  if(coneCount != 1){
-    liftTo(height-250);
+  if(coneCount >= 4){
+    liftTo(height);
   }
   /*
   if(coneCount > 6){
@@ -325,34 +351,22 @@ void stackCone(int delayReduction, int heightReduction){
     BL.target = BR.target = height-LIFT_DROP +125;
   }
   */
-  if(coneCount > 6){
+  if(coneCount > 8){
+    chainTo(CB_VERTICAL_POS2+130);
+  }
+  else{
     chainTo(CB_VERTICAL_POS2);
   }
-  else{
-    if(coneCount == 1){
-      chainTo(CB_VERTICAL_POS-100);
-    }
-    else if(coneCount == 2){
-      chainTo(CB_VERTICAL_POS-50);
-    }
-    else{
-      chainTo(CB_VERTICAL_POS);
-    }
-  }
-  if(coneCount == 1){
-    delay(400);
-  }
   //delay(250);
-  /*
-  if(coneCount > 1){
-    liftTo(height-LIFT_DROP);
+
+  if(coneCount > 4){
+    liftToPrecise(height-LIFT_DROP);
   }
   else{
-    if(coneCount > 1){
-      liftTo(height-100);
-    }
+    delay(200*(5-coneCount));
   }
-  */
+
+
   /*
   while(joystickGetDigital(1, 5, JOY_UP)){
     delay(10);
@@ -367,7 +381,7 @@ void stackConePylon(int delayReduction){
   coneCountPylon++;
   setClaw(-127);
   //liftTo(1450);
-  liftTo(1475);
+  liftTo(1350);
   delay(CLAW_CLOSE_TIME-delayReduction);
   setClaw(-10);
   BL.target = BR.target = height;
@@ -376,19 +390,8 @@ void stackConePylon(int delayReduction){
   while(BL.error > 500){
     delay(20);
   }
-  if(coneCount > 6){
-    chainTo(CB_VERTICAL_PYLON);
-  }
-  else{
-    chainTo(CB_VERTICAL_PYLON);
-  }
+  chainTo(CB_VERTICAL_PYLON-100);
   liftTo(height);
-  if(coneCount > 6){
-    chainTo(CB_VERTICAL_PYLON);
-  }
-  else{
-    chainTo(CB_VERTICAL_PYLON);
-  }
   delay(250);
   while(joystickGetDigital(1, 5, JOY_UP)){
     delay(10);
@@ -397,32 +400,40 @@ void stackConePylon(int delayReduction){
 }
 void resetLift(){
   stuff = 1;
-  int height = ONE_CONE_PYLON_STACK_HEIGHT + (coneCount*CONE_HEIGHT) - 290;
+  int height = ONE_CONE_STACK_HEIGHT + (coneCount*CONE_HEIGHT) - 100;
   setClaw(127);
   if(coneCount <= 1){
     delay(300);
   }
   else{
-    delay(CLAW_OPEN_TIME/2);
+    delay(CLAW_OPEN_TIME);
   }
   if(coneCount>1){
     if(coneCount > 7){
-      BL.target = BR.target  = (height-150);
+      BL.target = BR.target  = (height-50);
     }
     else{
-      BL.target = BR.target  = (height-250);
+      BL.target = BR.target  = (height-50);
     }
   }
   delay(CLAW_OPEN_TIME/2);
-  setClaw(10);
+  //setClaw(10);
   T.target = CB_STANDARD_POS;
   delay(40);
   while(fabs(T.error) > 2400){
     delay(20);
   }
+  setClaw(10);
   BR.target = BL.target = LIFT_STANDARD_POS;
   chainTo(CB_STANDARD_POS);
-  liftTo(LIFT_STANDARD_POS);
+  if(joystickGetDigital(1, 6, JOY_DOWN)){
+    held = true;
+    setClaw(-127);
+    liftTo(1400);
+  }
+  else{
+    liftTo(LIFT_STANDARD_POS);
+  }
   chainTo(CB_STANDARD_POS);
   while(joystickGetDigital(1, 5, JOY_DOWN)){
     delay(10);
@@ -431,19 +442,27 @@ void resetLift(){
 }
 void resetLift2(){
   stuff = 1;
-  int height = ONE_CONE_STACK_HEIGHT + (coneCount*CONE_HEIGHT);
+  int height;
+  if(coneCount >= 4){
+    height = ONE_CONE_STACK_HEIGHT + (coneCount*CONE_HEIGHT) -100;
+  }
+  else{
+    height = 1450;
+  }
   setClaw(127);
-  delay(CLAW_OPEN_TIME/2);
+  delay(CLAW_OPEN_TIME);
   if(coneCount>1){
-    BL.target = BR.target  = (height-100);
+    BL.target = BR.target  = (height-50);
   }
   delay(CLAW_OPEN_TIME/2);
   setClaw(10);
-  T.target = 1100;
+  liftTo(height-50);
+  T.target = 1400;
   delay(30);
   while(fabs(T.error) > 1500){
     delay(20);
   }
+  setClaw(10);
   BR.target = BL.target = LIFT_STANDARD_POS;
   //liftTo(height-100);
   //chainTo(1200);
@@ -455,7 +474,7 @@ void resetLift2(){
   else{
     liftTo(LIFT_STANDARD_POS);
   }
-  chainTo(1100);
+  chainTo(1400);
   while(joystickGetDigital(1, 5, JOY_DOWN)){
     delay(10);
   }
@@ -466,7 +485,7 @@ void resetLift3(){
   int height = ONE_CONE_PYLON_STACK_HEIGHT + (coneCountPylon*CONE_HEIGHT);
   liftTo(height-LIFT_DROP);
   setClaw(127);
-  delay(CLAW_OPEN_TIME);
+  delay(CLAW_OPEN_TIME+250);
   setClaw(10);
   liftTo(height-100);
   while(!digitalRead(PylonButton)){
@@ -483,20 +502,26 @@ void resetLift3(){
 }
 bool manual = false;
 void baseMode(){
-  BR.target = BL.target =1900;
-  T.target = CB_VERTICAL_POS+100;
+  BR.target = BL.target = 1800;
+  T.target = CB_VERTICAL_POS+1000;
 }
 
 
 void awesomeLoop(void *ignore){
+  //baseMode();
+  //delay(300);
+  //setBase(-127);
+  //delay(900);
+  //setBase(-10);
   while(true){
+    if(!boolAuton){
     if(!manual){
       stuff = 0;
       if(joystickGetDigital(1, 5, JOY_UP)){
         holdCone();
       }
       else if(joystickGetDigital(1, 6, JOY_DOWN)){
-        stackCone(0, 50);
+        stackCone(0, 0);
         resetLift();
       }
       else if(joystickGetDigital(1, 5, JOY_DOWN)){
@@ -506,7 +531,7 @@ void awesomeLoop(void *ignore){
         resetLift();
       }
       else if(joystickGetDigital(1, 6, JOY_UP)){
-        stackCone(150, 0);
+        stackCone(100, -80);
         resetLift2();
       }
       else if(joystickGetDigital(1, 8, JOY_RIGHT)){
@@ -537,18 +562,15 @@ void awesomeLoop(void *ignore){
 
 
       if(joystickGetDigital(1, 7, JOY_DOWN)){
-        setBaseLeft(-127);
-        setBaseRight(-127);
+        setBase(-127);
         baseBreak = -5;
       }
       else if(joystickGetDigital(1, 7, JOY_UP)){
-        setBaseLeft(127);
-        setBaseRight(127);
+        setBase(127);
         baseBreak = 10;
       }
       else{
-        setBaseLeft(0 + baseBreak);
-        setBaseRight(0 + baseBreak);
+        setBase(0 + baseBreak);
       }
     }
     else{
@@ -592,14 +614,13 @@ void awesomeLoop(void *ignore){
         setBaseRight(-127);
       }
       else if(joystickGetDigital(1, 7, JOY_UP)){
-        setBaseLeft(127);
-        setBaseRight(127);
+        setBase(127);
       }
       else{
-        setBaseLeft(0);
-        setBaseRight(0);
+        setBase(0);
       }
     }
     delay(50);
+  }
   }
 }
