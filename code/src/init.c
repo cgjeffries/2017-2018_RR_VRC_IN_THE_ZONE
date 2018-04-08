@@ -225,6 +225,7 @@ void initialize(){
   quadLeftDrive = encoderInit(QuadLeft1, QuadLeft2, false);
   quadRightDrive = encoderInit(QuadRight1, QuadRight2, true);
   mainQuad = encoderInit(mainQuad1, mainQuad2, false);
+  setTeamName("2114B");
 
   TaskHandle jkjkjkjTH = taskRunLoop(debug, 200);
   BL.target = BR.target = LIFT_STANDARD_POS;

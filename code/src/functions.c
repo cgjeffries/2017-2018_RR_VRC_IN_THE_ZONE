@@ -1,5 +1,7 @@
 #include "main.h"
 
+bool loaderStacking = false;
+
 
 void setDriveLeft(int speed){
   motorSet(driveLeft, speed);
@@ -198,8 +200,15 @@ void liftToPrecise(int pos){
   if(!eStop){
     BL.target = BR.target = pos;
     delay(20);
-    while(((fabs(BL.error) > 75) || (fabs(BR.error) > 75)) && !eStop){
-      delay(20);
+    if(pos < 1430){
+      while(((BL.error < -50) || (BR.error < -50)) && !eStop){
+        delay(20);
+      }
+    }
+    else{
+      while(((fabs(BL.error) > 75) || (fabs(BR.error) > 75)) && !eStop){
+        delay(20);
+      }
     }
   }
 }
@@ -209,9 +218,14 @@ void liftToPrecise(int pos){
 void chainTo(int pos){
   if(!eStop){
     T.target = pos;
-    delay(20);
+    delay(40);
     if(pos == CB_HALF_POS){
       while((fabs(T.error) > 200) && !eStop){
+        delay(20);
+      }
+    }
+    else if(pos == CB_VERTICAL_POS || pos == CB_VERTICAL_POS2){
+      while(T.error > 100){
         delay(20);
       }
     }
@@ -227,10 +241,10 @@ void baseDown(){
   stuff = 1;
   setBase(-127);
   BL.target = BR.target = (BL.target + 100);
-  delay(500);
-  T.target = 2300;
-  delay(500);
-  BL.target = BR.target = (BL.target - 300);
+  delay(300);
+  T.target = 2000;
+  delay(300);
+  BL.target = BR.target = (BL.target - 200);
   delay(300);
   setBase(0);
   baseBreak = 0;
@@ -238,7 +252,18 @@ void baseDown(){
 }
 void holdCone(){
   stuff = 1;
-  int height = ONE_CONE_STACK_HEIGHT + (coneCount*CONE_HEIGHT) + 50;
+  int height;
+  if(coneCount >= 4){
+    if(coneCount >= 10){
+      height = ONE_CONE_STACK_HEIGHT + (coneCount*CONE_HEIGHT) - 90;
+    }
+    else{
+      height = ONE_CONE_STACK_HEIGHT + (coneCount*CONE_HEIGHT) - 130;
+    }
+  }
+  else{
+    height = ONE_CONE_PYLON_STACK_HEIGHT + 240-130;
+  }
   //setClaw(-127);
   //liftTo(1450);
   //liftTo(1500);
@@ -251,19 +276,18 @@ void holdCone(){
 
   if(coneCount > 6){
     if(coneCount > 10){
-      chainTo(CB_VERTICAL_POS2 + 100);
+      chainTo(CB_VERTICAL_POS2);
     }
     else{
-      chainTo(CB_VERTICAL_POS2+100);
+      chainTo(CB_VERTICAL_POS2);
     }
   }
   else{
     chainTo(CB_VERTICAL_POS);
   }
-  delay(250);
   delay(400);
-  if(coneCount > 1){
-    //liftTo(height-450);
+  if(coneCount > 6){
+    liftTo(height-320);
   }
   else{
     if(coneCount > 1){
@@ -300,10 +324,15 @@ void stackCone(int delayReduction, int heightReduction){
   //liftTo(1450);
   liftToPrecise(1360-heightReduction);
   //if(!held){
+  if(coneCount > 4){
     delay(CLAW_CLOSE_TIME-delayReduction);
+  }
+  else{
+      delay(CLAW_CLOSE_TIME);
+  }
     held = false;
   //}
-  setClaw(-10);
+  setClaw(-20);
   if(coneCount < 999){
     BL.target = BR.target = height;
   }
@@ -318,7 +347,7 @@ void stackCone(int delayReduction, int heightReduction){
   while(BL.error > 500){
     delay(20);
   }
-  if(coneCount > 8){
+  if(coneCount > 999){ //8
     T.target = CB_VERTICAL_POS2+130;
   }
   else{
@@ -351,8 +380,8 @@ void stackCone(int delayReduction, int heightReduction){
     BL.target = BR.target = height-LIFT_DROP +125;
   }
   */
-  if(coneCount > 8){
-    chainTo(CB_VERTICAL_POS2+130);
+  if(coneCount > 4){  //8
+    //chainTo(CB_VERTICAL_POS2+130);
   }
   else{
     chainTo(CB_VERTICAL_POS2);
@@ -363,7 +392,7 @@ void stackCone(int delayReduction, int heightReduction){
     liftToPrecise(height-LIFT_DROP);
   }
   else{
-    delay(200*(5-coneCount));
+    delay(200);
   }
 
 
@@ -410,7 +439,7 @@ void resetLift(){
   }
   if(coneCount>1){
     if(coneCount > 7){
-      BL.target = BR.target  = (height-50);
+      BL.target = BR.target  = (height);
     }
     else{
       BL.target = BR.target  = (height-50);
@@ -469,12 +498,15 @@ void resetLift2(){
   if(joystickGetDigital(1, 6, JOY_UP)){
     held = true;
     setClaw(-127);
-    liftTo(1400);
+    liftTo(1429);
   }
   else{
     liftTo(LIFT_STANDARD_POS);
   }
-  chainTo(1400);
+  //chainTo(1400);
+  while(T.error < -100 && !eStop){
+    delay(20);
+  }
   while(joystickGetDigital(1, 5, JOY_DOWN)){
     delay(10);
   }
@@ -531,7 +563,7 @@ void awesomeLoop(void *ignore){
         resetLift();
       }
       else if(joystickGetDigital(1, 6, JOY_UP)){
-        stackCone(100, -80);
+        stackCone(200, -80);
         resetLift2();
       }
       else if(joystickGetDigital(1, 8, JOY_RIGHT)){

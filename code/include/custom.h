@@ -82,7 +82,7 @@ void autonomousAlt();
 
 //Position Definitions
 #define CB_STANDARD_POS 250
-#define CB_HALF_POS 1000
+#define CB_HALF_POS 1500
 #define CB_VERTICAL_POS 2860
 #define CB_VERTICAL_POS2 2860
 #define LIFT_STANDARD_POS 1600
@@ -92,9 +92,9 @@ void autonomousAlt();
 #define CLAW_CLOSE_TIME 250
 #define CLAW_OPEN_TIME 250
 #define LIFT_MAX 2500
-#define LIFT_MIN 1450
+#define LIFT_MIN 1370
 #define ONE_CONE_PYLON_STACK_HEIGHT 1750
-#define CB_VERTICAL_PYLON 2350
+#define CB_VERTICAL_PYLON 2550
 
 #define CHAIN_MAX 3900
 #define CHAIN_MIN 100
@@ -110,6 +110,7 @@ extern bool manual;
 extern bool liftDisabled;
 extern bool eStop;
 extern bool autoPIDDisable;
+extern bool autoLiftPIDDisable;
 extern TaskHandle secondTH;
 extern TaskHandle firstTHstuff;
 extern int auton;
@@ -118,6 +119,7 @@ extern int selectedAuto;
 extern int baseLiftCounts;
 
 extern bool boolAuton;
+
 
 //Auton definitions
 #define NOTHING 0

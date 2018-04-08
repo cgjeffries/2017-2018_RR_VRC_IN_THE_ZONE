@@ -71,13 +71,25 @@ void mainLoopOp(){
       else{
         if(T.target < 2500){
           if(T.target < 400){
-            setChain((int) PIDdo(&T));
+            if(T.target == CB_STANDARD_POS){
+                if(T.sensor < CB_STANDARD_POS-10){
+                  int temp = PIDdo(&T);
+                  setChain(60);
+                }
+                else{
+                  setChain((int) PIDdo(&T));
+                }
+            }
+            else{
+              setChain((int) PIDdo(&T));
+            }
           }
           else{
             setChain((int) PIDdo(&T) + 5);
           }
         }
         else if(T.target > 2500 && T.target < 2900){
+          /*
           if(T.error < 700 && T.error > 0){
             int value = PIDdo(&T);
             if (value > 50) {
@@ -85,6 +97,10 @@ void mainLoopOp(){
             }else{
               setChain(value);
             }
+            */
+          if(T.error < 300){
+            int temp = PIDdo(&T);
+            setChain(20);
           }
           else if(T.error < 0){
             setChain(PIDdo(&T) - 15);
@@ -100,9 +116,12 @@ void mainLoopOp(){
     }
   }
 }
+bool autoLiftPIDDisable = false;
 void mainLoopAuto(){
-  setLiftLeft((int) PIDdo(&BL));
-  setLiftRight((int)PIDdo(&BR));
+  if(!autoLiftPIDDisable){
+    setLiftLeft((int) PIDdo(&BL));
+    setLiftRight((int)PIDdo(&BR));
+  }
   setChain((int) PIDdo(&T));
   if(!autoPIDDisable){
     if((LD.sensor>RD.sensor && LD.error > 500) && !(LD.target > 0 && RD.target < 0)){
